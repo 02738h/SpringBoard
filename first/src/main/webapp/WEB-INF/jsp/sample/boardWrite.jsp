@@ -20,8 +20,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" class="view_text">
-						<textarea rows="20" cols="100" title="내용" id="CONTENTS" name="CONTENTS">
-						</textarea>
+						<textarea rows="20" cols="100" title="내용" id="CONTENTS" name="CONTENTS"></textarea>
 					</td>
 				</tr>
 			</tbody>

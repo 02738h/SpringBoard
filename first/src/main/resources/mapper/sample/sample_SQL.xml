@@ -12,10 +12,13 @@
 			]]>
 	</select>
 	
-	<insert id="insertBoard" parameterType="hashMap">
+	<insert id="insertBoard" parameterType="hashMap" useGeneratedKeys="true" keyProperty="IDX">
+			<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+				select SEQ_TB_BOARD_IDX.NEXTVAL from dual
+			</selectKey>
 			<![CDATA[
-			INSERT INTO TB_BOARD (IDX, TITLE, CONTENTS, HIT_CNT, DEL_GB, CREA_DTM, CREA_ID)
-			VALUES (SEQ_TB_BOARD_IDX.NEXTVAL, #{TITLE}, #{CONTENTS}, 0 , 'N', SYSDATE, 'Admin')
+				INSERT INTO TB_BOARD (IDX, TITLE, CONTENTS, HIT_CNT, DEL_GB, CREA_DTM, CREA_ID)
+				VALUES (SEQ_TB_BOARD_IDX.NEXTVAL, #{TITLE}, #{CONTENTS}, 0 , 'N', SYSDATE, 'Admin')
 			]]>	
 	</insert>
 	
@@ -37,17 +40,27 @@
 	
 	<update id="updateBoard" parameterType="hashmap">
 			<![CDATA[
-			UPDATE TB_BOARD
-			SET TITLE = #{TITLE}, CONTENTS = #{CONTENTS}
-			WHERE IDX=#{IDX}
+				UPDATE TB_BOARD
+				SET TITLE = #{TITLE}, CONTENTS = #{CONTENTS}
+				WHERE IDX=#{IDX}
 			]]>
 	</update>
 	
 	<update id="deleteBoard" parameterType="hashmap">
 			<![CDATA[
-			UPDATE TB_BOARD
-			SET DEL_GB = 'Y'
-			WHERE IDX=#{IDX}
+				UPDATE TB_BOARD
+				SET DEL_GB = 'Y'
+				WHERE IDX=#{IDX}
 			]]>
 	</update>
+	
+	<insert id="insertFile" parameterType="hashmap">
+			<![CDATA[
+				INSERT INTO TB_FILE 
+					(IDX, BOARD_IDX, ORIGINAL_FILE_NAME, STORED_FILE_NAME, FILE_SIZE, CREA_ID)
+				VALUES 
+					(SEQ_TB_FILE_IDX.NEXTVAL, #{BOARD_IDX}, #{ORIGINAL_FILE_NAME}, 
+					#{STORED_FILE_NAME}, #{FILE_SIZE}, 'Admin')
+			]]>
+	</insert>
 </mapper>
