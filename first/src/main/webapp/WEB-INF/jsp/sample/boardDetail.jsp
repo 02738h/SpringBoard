@@ -34,8 +34,26 @@
 			<tr>
 				<td colspan="4">${map.CONTENTS}</td>
 			</tr>
+			<tr>
+				<th scope="row">첨부파일</th>
+					<c:choose>
+						<c:when test="${fn:length(list) > 0}">
+						<td colspan="3">
+							<c:forEach var="row" items="${list}">
+								<input type="hidden" id="IDX" value="${row.IDX}">
+								<a href="#this" name="file">${row.ORIGINAL_FILE_NAME}</a>
+								(${row.FILE_SIZE}kb)
+							</c:forEach>
+						</td>
+						</c:when>
+					<c:otherwise>
+						<td colspan="3">첨부파일이 없습니다.</td>
+				</c:otherwise>
+				</c:choose>
+			</tr>
 		<tbody>
 	</table>
+	<br/>
 	
 	<a href="#this" class="btn" id="list">목록으로</a>
 	<a href="#this" class="btn" id="update">수정하기</a>
@@ -43,16 +61,22 @@
 	<%@ include file="/WEB-INF/include/include-body.jspf" %>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#list").on("click", function(e){
+			$("#list").on("click", function(e){ //목록으로 버튼
 				e.preventDefault();
 				fn_openBoardList();
 			});
 			
-			$("#update").on("click", function(e){
+			$("#update").on("click", function(e){ //수정하기 버튼
 				e.preventDefault();
 				fn_openBoardUpdate();
 			});
-		});			
+			
+			$("a[name='file']").on("click", function(e){ //파일 이름
+				e.preventDefault();
+				fn_downloadFile($(this));
+			});
+		});	
+		
 			function fn_openBoardList(){
 				var comSubmit = new ComSubmit();
 				comSubmit.setUrl("<c:url value='/sample/openBoardList.do'/>");
@@ -63,6 +87,15 @@
 				var idx = "${map.IDX}"
 				var comSubmit = new ComSubmit();
 				comSubmit.setUrl("<c:url value='/sample/openBoardUpdate.do'/>")
+				comSubmit.addParam("IDX", idx);
+				comSubmit.submit();
+			}
+			
+			function fn_downloadFile(obj){
+				var idx = obj.parent().find("#IDX").val();
+				
+				var comSubmit = new ComSubmit();
+				comSubmit.setUrl("<c:url value='/common/downloadFile.do' />");
 				comSubmit.addParam("IDX", idx);
 				comSubmit.submit();
 			}
