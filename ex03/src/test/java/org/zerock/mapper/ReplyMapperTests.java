@@ -76,6 +76,14 @@ public class ReplyMapperTests {
 		
 	}
 	
+	@Test
+	public void testList2() {
+		Criteria cri = new Criteria(2, 10);
+		//44번 게시물의 댓글 조회
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 10L);
+		replies.forEach(reply -> log.info(reply));
+	}
+	
 	
 	
 
