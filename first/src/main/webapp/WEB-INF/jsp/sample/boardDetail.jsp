@@ -40,9 +40,11 @@
 						<c:when test="${fn:length(list) > 0}">
 						<td colspan="3">
 							<c:forEach var="row" items="${list}">
+							<p>
 								<input type="hidden" id="IDX" value="${row.IDX}">
 								<a href="#this" name="file">${row.ORIGINAL_FILE_NAME}</a>
 								(${row.FILE_SIZE}kb)
+							</p>
 							</c:forEach>
 						</td>
 						</c:when>

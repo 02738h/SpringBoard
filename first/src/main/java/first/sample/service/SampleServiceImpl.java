@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.FileChooserUI;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,22 @@ public class SampleServiceImpl implements SampleService{
 	}
 
 	@Override
-	public void updateBoard(Map<String, Object> map) throws Exception {
+	public void updateBoard(Map<String, Object> map, HttpServletRequest request) throws Exception {
 		sampleDAO.updateBoard(map);
+		
+		sampleDAO.deleteFileList(map); //(DEL_GB = 'Y')로 바꾸는 역할
+		List<Map<String, Object>> list = fileUtils.parseUpdateFileInfo(map, request); //request 담긴 정보를 list로 변환
+		Map<String, Object> tempMap = null;
+		for(int i=0, size=list.size(); i<size; i++) {
+			tempMap = list.get(i);
+			if(tempMap.get("IS_NEW").equals("Y")) { //IS_NEW가 'Y'인 경우 신규 저장될 파일, 'Y'가 아니면 저장되어있던 파일
+				sampleDAO.insertFile(tempMap);
+			} else {
+				sampleDAO.updateFile(tempMap);
+			}
+			
+				
+		}
 	}
 
 	@Override
